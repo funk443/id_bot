@@ -1,0 +1,142 @@
+#+TITLE: Main bot file
+#+AUTHOR: CToID
+#+PROPERTY: header-args :tangle ../bot.py
+#+OPTIONS: num:nil 
+
+Copyright (C) 2022 CToID
+
+This file is part of id_bot
+
+id_bot is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published
+by the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+id_bot is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+* Table of contents :TOC_1:noexport:
+- [[#the-license-notices][The license notices]]
+- [[#import-packages][Import packages]]
+- [[#initial-setup][Initial setup]]
+- [[#main-funcions][Main funcions]]
+- [[#reading-cog-files][Reading cog files]]
+- [[#important-stuff][Important stuff]]
+
+* The license notices
+#+begin_src python
+"""
+Copyright (C) 2022 CToID
+
+This file is part of id_bot
+
+id_bot is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published
+by the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+id_bot is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+"""
+#+end_src
+
+* Import packages
+| Package      | Description                                  |
+|--------------+----------------------------------------------|
+| discord      | A discord API for python, part of discord.py |
+| discord.ext  | An extension for discord.py                  |
+| configparser | For reading ini files                        |
+| os           | For file manipulations                       |
+#+begin_src python
+import discora, configparser, os
+from discord.ext import commands
+#+end_src
+
+* Initial setup
+** Setting up intents
+#+begin_src python
+intents = discord.Intents.all ()
+#+end_src
+
+** Setting up bot activity
+#+begin_src python
+activity = discord.Game (name = "GNU Emacs")
+#+end_src
+
+** Reading in Discord bot token, config and prefix file
+| File       | Description                        |
+|------------+------------------------------------|
+| config.ini | For storing tokens and other stuff |
+| prefix.ini | For storing prefixes               |
+#+begin_src python
+config = configparser.ConfigParser ()
+config.read ("config.ini")
+
+pf = configparser.ConfigParser ()
+pf.read ("prefix.ini")
+#+end_src
+
+** Setting up get_prefix function
+We can use this function to achieve different prefixs on different servers.
+#+begin_src python
+async def get_prefix (bot, ctx):
+  if (str (ctx.guild.id) not in pf):
+    return pf["prefix"]["default"]
+  else:
+    return pf["prefix"][str (ctx.guild.id)]
+#+end_src
+
+** Define the bot
+#+begin_src python
+bot = commands.Bot (command_prefix = get_prefix, intents = intents, activity = activity, help_command = None)
+#+end_src
+
+* Main funcions
+** Bot online check
+This will print out a message when bot is all set and connected to discord.
+#+begin_src python
+@bot.event
+async def on_ready ():
+  print ("UP")
+#+end_src
+
+** Prefix changing
+Allow users to change prefix.
+#+begin_src python
+@bot.command ()
+async def change_prefix (ctx, npf = None):
+  if (npf != None):
+    pf["prefix"][str (ctx.guild.id)] = npf
+    await ctx.send (f"Prefix changed to {npf}")
+  else:
+    pf["prefix"][str (ctx.guild.id)] = "id "
+    await ctx.send ("沒給我東西那我就把他改回預設的了")
+
+  with open ("prefix.ini", "w") as prefixfile:
+    pf.write (prefixfile)
+#+end_src
+
+* Reading cog files
+This will read cog files from cogs folder.
+#+begin_src python
+for fn in os.listdir ("./cogs"):
+  if (fn.endswith (".py")):
+    bot.load_extension (f"cogs.{fn[:-3]}")
+#+end_src
+
+* Important stuff
+Boilerplate code that protects users from accidentally invoking the script when they didn't intend to. 
+#+begin_src python
+if (__name__ == "__main__"):
+  bot.run (str (config["tokens"]["discord_token"]))
+#+end_src
