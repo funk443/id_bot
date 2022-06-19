@@ -3,7 +3,7 @@
 #+PROPERTY: header-args :tangle ../bot.py
 #+OPTIONS: num:nil 
 
-Copyright (C) 2022 CToID
+Copyright (C) 2022  CToID
 
 This file is part of id_bot
 
@@ -25,14 +25,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 - [[#import-packages][Import packages]]
 - [[#initial-setup][Initial setup]]
 - [[#main-funcions][Main funcions]]
-- [[#reading-cog-files][Reading cog files]]
 - [[#create-necessery-directories-if-they-dont-exist][Create necessery directories if they don't exist]]
+- [[#reading-cog-files][Reading cog files]]
 - [[#important-stuff][Important stuff]]
 
 * The license notices
 #+begin_src python
 """
-Copyright (C) 2022 CToID
+Copyright (C) 2022  CToID
 
 This file is part of id_bot
 
@@ -92,7 +92,7 @@ We can use this function to achieve different prefixs on different servers.
 #+begin_src python
 async def get_prefix (bot, ctx):
   if (str (ctx.guild.id) not in pf):
-    return pf["default"]["prefix"]
+    return pf["default"]["prefix"][1:-1]
   else:
     return pf[str (ctx.guild.id)]["prefix"]
 #+end_src
@@ -103,6 +103,14 @@ bot = commands.Bot (command_prefix = get_prefix, intents = intents, activity = a
 #+end_src
 
 * Main funcions
+** Startup notice
+#+begin_src python
+print ("id_bot  Copyright (C) 2022  CToID")
+print ("This program comes with ABSOLUTELY NO WARRANTY.")
+print ("This is free software, and you are welcome to redistribute it under certain conditions.")
+print ("Check version 3 (or any later version) of GNU Affero General Public License for details.")
+#+end_src
+
 ** Bot online check
 This will print out a message when bot is all set and connected to discord.
 #+begin_src python
@@ -120,19 +128,11 @@ async def change_prefix (ctx, npf = None):
     pf[str (ctx.guild.id)]["prefix"] = npf
     await ctx.send (f"Prefix changed to {npf}")
   else:
-    pf[str (ctx.guild.id)]["prefix"] = pf["default"]["prefix"]
+    pf[str (ctx.guild.id)]["prefix"] = pf["default"]["prefix"][1:-1]
     await ctx.send ("沒給我東西那我就把他改回預設的了")
 
   with open ("prefix.ini", "w") as prefixfile:
     pf.write (prefixfile)
-#+end_src
-
-* Reading cog files
-This will read cog files from cogs folder.
-#+begin_src python
-for fn in os.listdir ("./cogs"):
-  if (fn.endswith (".py")):
-    bot.load_extension (f"cogs.{fn[:-3]}")
 #+end_src
 
 * Create necessery directories if they don't exist
@@ -141,6 +141,14 @@ try:
   os.mkdir ("./datas")
 except:
   pass
+#+end_src
+
+* Reading cog files
+This will read cog files from cogs folder.
+#+begin_src python
+for fn in os.listdir ("./cogs"):
+  if (fn.endswith (".py")):
+    bot.load_extension (f"cogs.{fn[:-3]}")
 #+end_src
 
 * Important stuff

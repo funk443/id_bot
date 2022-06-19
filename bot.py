@@ -1,5 +1,5 @@
 """
-Copyright (C) 2022 CToID
+Copyright (C) 2022  CToID
 
 This file is part of id_bot
 
@@ -32,11 +32,16 @@ pf.read ("prefix.ini")
 
 async def get_prefix (bot, ctx):
   if (str (ctx.guild.id) not in pf):
-    return pf["prefix"]["default"]
+    return pf["default"]["prefix"][1:-1]
   else:
-    return pf["prefix"][str (ctx.guild.id)]
+    return pf[str (ctx.guild.id)]["prefix"]
 
 bot = commands.Bot (command_prefix = get_prefix, intents = intents, activity = activity, help_command = None)
+
+print ("id_bot  Copyright (C) 2022  CToID")
+print ("This program comes with ABSOLUTELY NO WARRANTY.")
+print ("This is free software, and you are welcome to redistribute it under certain conditions.")
+print ("Check version 3 (or any later version) of GNU Affero General Public License for details.")
 
 @bot.event
 async def on_ready ():
@@ -45,20 +50,23 @@ async def on_ready ():
 @bot.command ()
 async def change_prefix (ctx, npf = None):
   if (npf != None):
-    pf["prefix"][str (ctx.guild.id)] = npf
+    pf[str (ctx.guild.id)]["prefix"] = npf
     await ctx.send (f"Prefix changed to {npf}")
   else:
-    pf["prefix"][str (ctx.guild.id)] = pf["prefix"]["default"]
+    pf[str (ctx.guild.id)]["prefix"] = pf["default"]["prefix"][1:-1]
     await ctx.send ("沒給我東西那我就把他改回預設的了")
 
   with open ("prefix.ini", "w") as prefixfile:
     pf.write (prefixfile)
 
+try:
+  os.mkdir ("./datas")
+except:
+  pass
+
 for fn in os.listdir ("./cogs"):
   if (fn.endswith (".py")):
     bot.load_extension (f"cogs.{fn[:-3]}")
-
-
 
 if (__name__ == "__main__"):
   bot.run (str (config["tokens"]["discord_token"]))
