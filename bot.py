@@ -48,7 +48,7 @@ async def change_prefix (ctx, npf = None):
     pf["prefix"][str (ctx.guild.id)] = npf
     await ctx.send (f"Prefix changed to {npf}")
   else:
-    pf["prefix"][str (ctx.guild.id)] = pf["prefix"]["default"]
+    pf["prefix"][str (ctx.guild.id)] = "id "
     await ctx.send ("沒給我東西那我就把他改回預設的了")
 
   with open ("prefix.ini", "w") as prefixfile:
@@ -57,6 +57,8 @@ async def change_prefix (ctx, npf = None):
 for fn in os.listdir ("./cogs"):
   if (fn.endswith (".py")):
     bot.load_extension (f"cogs.{fn[:-3]}")
+
+
 
 if (__name__ == "__main__"):
   bot.run (str (config["tokens"]["discord_token"]))

@@ -26,6 +26,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 - [[#initial-setup][Initial setup]]
 - [[#main-funcions][Main funcions]]
 - [[#reading-cog-files][Reading cog files]]
+- [[#create-necessery-directories-if-they-dont-exist][Create necessery directories if they don't exist]]
 - [[#important-stuff][Important stuff]]
 
 * The license notices
@@ -58,7 +59,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 | configparser | For reading ini files                        |
 | os           | For file manipulations                       |
 #+begin_src python
-import discora, configparser, os
+import discord, configparser, os
 from discord.ext import commands
 #+end_src
 
@@ -132,6 +133,10 @@ This will read cog files from cogs folder.
 for fn in os.listdir ("./cogs"):
   if (fn.endswith (".py")):
     bot.load_extension (f"cogs.{fn[:-3]}")
+#+end_src
+
+* Create necessery directories if they don't exist
+#+begin_src python
 #+end_src
 
 * Important stuff
