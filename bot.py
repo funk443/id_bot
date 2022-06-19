@@ -17,7 +17,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-import discora, configparser, os
+import discord, configparser, os
 from discord.ext import commands
 
 intents = discord.Intents.all ()
@@ -48,7 +48,7 @@ async def change_prefix (ctx, npf = None):
     pf["prefix"][str (ctx.guild.id)] = npf
     await ctx.send (f"Prefix changed to {npf}")
   else:
-    pf["prefix"][str (ctx.guild.id)] = "id "
+    pf["prefix"][str (ctx.guild.id)] = pf["prefix"]["default"]
     await ctx.send ("沒給我東西那我就把他改回預設的了")
 
   with open ("prefix.ini", "w") as prefixfile:
