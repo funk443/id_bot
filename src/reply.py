@@ -52,11 +52,14 @@ class reply (commands.Cog):
         except:
           await ctx.send ("本來就沒有的東西我要怎麼刪")
 
+    elif (key == "list"):
+      await ctx.send (file = discord.File (f"./datas/reply/reply_{ctx.guild.id}.json"))
+
     else:
       return
 
     with open (f"./datas/reply/reply_{ctx.guild.id}.json", "w") as reply_file:
-      json.dump (rp, reply_file)
+      json.dump (rp, reply_file, indent = 2)
 
 def setup (bot):
   bot.add_cog (reply (bot))

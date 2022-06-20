@@ -110,6 +110,12 @@ class reply (commands.Cog):
 
 ** List reply 
 #+begin_src python
+    elif (key == "list"):
+      await ctx.send (file = discord.File (f"./datas/reply/reply_{ctx.guild.id}.json"))
+#+end_src
+
+** Wrong keys
+#+begin_src python
     else:
       return
 #+end_src
@@ -117,7 +123,7 @@ class reply (commands.Cog):
 ** Write the changes into reply file
 #+begin_src python
     with open (f"./datas/reply/reply_{ctx.guild.id}.json", "w") as reply_file:
-      json.dump (rp, reply_file)
+      json.dump (rp, reply_file, indent = 2)
 #+end_src
 
 * Setup function
