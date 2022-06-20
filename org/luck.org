@@ -90,7 +90,7 @@ class daily_luck (commands.Cog):
 
 ** Check if user already used this command today
 If the user haven't used this command before.
-Note that time shift of 8 hours (UTC+8) is also set here. 
+Note that a time shift of 8 hours (UTC+8) is also set here. 
 #+begin_src python
     shift = datetime.timedelta (hours = 8)
 
