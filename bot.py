@@ -29,12 +29,14 @@ config.read ("config.ini")
 
 if ("prefix.json" not in os.listdir ()):
   with open ("./prefix.json", "w") as json_file:
-    json.dump ({"default": "id "}, json_file)
+    json.dump ({"default": "id "}, json_file, indent = 2)
 
 with open ("./prefix.json", "r") as json_file:
   prefix = json.load (json_file)
 
 async def get_prefix (bot, ctx):
+  with open ("./prefix.json", "r") as json_file:
+    prefix = json.load (json_file)
   try:
     return prefix[str (ctx.guild.id)]
   except:
@@ -44,7 +46,7 @@ bot = commands.Bot (command_prefix = get_prefix, intents = intents, activity = a
 
 print ("id_bot  Copyright (C) 2022  CToID")
 print ("This program comes with ABSOLUTELY NO WARRANTY.")
-print ("This is free software, and you are welcome to redistribute it under certain conditions.")
+print ("This program is free software, and you are welcome to redistribute it under certain conditions.")
 print ("Check version 3 (or any later version) of GNU Affero General Public License for details.")
 
 @bot.event
@@ -59,6 +61,9 @@ async def change_prefix (ctx, npf = None):
   else:
     prefix[str (ctx.guild.id)] = prefix["default"]
     await ctx.send ("改回預設引導詞")
+
+  with open ("./prefix.json", "w") as json_file:
+    json.dump (prefix, json_file, indent = 2)
 
 try:
   os.mkdir ("./datas")

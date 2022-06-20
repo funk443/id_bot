@@ -26,7 +26,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 - [[#initial-setup][Initial setup]]
 - [[#main-funcions][Main funcions]]
 - [[#create-necessery-directories-if-they-dont-exist][Create necessery directories if they don't exist]]
-- [[#reading-cog-files][Reading cog files]]
+- [[#read-cog-files][Read cog files]]
 - [[#important-stuff][Important stuff]]
 
 * The license notices
@@ -65,17 +65,17 @@ from discord.ext import commands
 #+end_src
 
 * Initial setup
-** Setting up intents
+** Set up intents
 #+begin_src python
 intents = discord.Intents.all ()
 #+end_src
 
-** Setting up bot activity
+** Set up bot activity
 #+begin_src python
 activity = discord.Game (name = "GNU Emacs")
 #+end_src
 
-** Reading in Discord bot token and prefix file
+** Read in Discord bot token and prefix file
 | File        | Description                        |
 |-------------+------------------------------------|
 | config.ini  | For storing tokens and other stuff |
@@ -86,7 +86,7 @@ config.read ("config.ini")
 
 if ("prefix.json" not in os.listdir ()):
   with open ("./prefix.json", "w") as json_file:
-    json.dump ({"default": "id "}, json_file)
+    json.dump ({"default": "id "}, json_file, indent = 2)
 
 with open ("./prefix.json", "r") as json_file:
   prefix = json.load (json_file)
@@ -95,6 +95,8 @@ with open ("./prefix.json", "r") as json_file:
 ** A function to get prefix for different server
 #+begin_src python
 async def get_prefix (bot, ctx):
+  with open ("./prefix.json", "r") as json_file:
+    prefix = json.load (json_file)
   try:
     return prefix[str (ctx.guild.id)]
   except:
@@ -111,7 +113,7 @@ bot = commands.Bot (command_prefix = get_prefix, intents = intents, activity = a
 #+begin_src python
 print ("id_bot  Copyright (C) 2022  CToID")
 print ("This program comes with ABSOLUTELY NO WARRANTY.")
-print ("This is free software, and you are welcome to redistribute it under certain conditions.")
+print ("This program is free software, and you are welcome to redistribute it under certain conditions.")
 print ("Check version 3 (or any later version) of GNU Affero General Public License for details.")
 #+end_src
 
@@ -133,6 +135,9 @@ async def change_prefix (ctx, npf = None):
   else:
     prefix[str (ctx.guild.id)] = prefix["default"]
     await ctx.send ("改回預設引導詞")
+
+  with open ("./prefix.json", "w") as json_file:
+    json.dump (prefix, json_file, indent = 2)
 #+end_src
 
 * Create necessery directories if they don't exist
@@ -144,7 +149,7 @@ except:
   pass
 #+end_src
 
-* Reading cog files
+* Read cog files
 This will read cog files from cogs folder.
 #+begin_src python
 for fn in os.listdir ("./src"):
