@@ -40,15 +40,21 @@ class role_selection (commands.Cog):
       with open (f"./datas/role_select/role_select_{ctx.guild.id}.json") as msg_file:
         msgs = json.load (msg_file)
 
-    msgs[message_link] = {}
+    try:
+      gcm = message_link.split ("/")[-3:]
+    except:
+      pass
+    msg_id = int (gcm[-1])
+
+    msgs[msg_id] = {}
 
     try:
       for i in roles_and_emojis:
         if (((len (i) == 1) and (emoji.is_emoji (i))) or (i[1] == ":")):
-          msgs[message_link][i] = []
+          msgs[msg_id][i] = []
           which_emoji = i
         elif ((i[0] == "<") and (i[1] == "@")):
-          msgs[message_link][which_emoji].append (i)
+          msgs[msg_id][which_emoji].append (i)
         else:
           await ctx.send ("好像打錯什麼了")
           return
@@ -59,18 +65,34 @@ class role_selection (commands.Cog):
     with open (f"./datas/role_select/role_select_{ctx.guild.id}.json", "w") as msg_file:
       json.dump (msgs, msg_file, indent = 2)
 
-    try:
-      gcm = message_link.split ("/")[-3:]
-    except:
-      pass
-    msg_id = int (gcm[-1])
-
     msg = await ctx.fetch_message (msg_id)
 
-    for i in msgs[message_link].keys ():
+    for i in msgs[msg_id].keys ():
       await msg.add_reaction (i)
 
     await ctx.message.delete ()
+
+  @commands.Cog.listener ()
+  async def on_raw_reaction_add (self, payload):
+
+    if (payload.member.bot):
+      return
+
+    try:
+      with open (f"./datas/role_select/role_select_{payload.guild_id}.json") as role_select_file:
+        data = json.load (role_select_file)
+    except:
+      return
+
+    msg_id = str (payload.message_id)
+    emoji = str (payload.emoji)
+
+    if ((msg_id in data)
+        and (emoji in data[msg_id])):
+      guild = self.bot.get_guild (payload.guild_id)
+      for i in data[msg_id][emoji]:
+        role = guild.get_role (int (i[3:-1]))
+        await payload.member.add_roles (role)
 
 def setup (bot):
   bot.add_cog (role_selection (bot))

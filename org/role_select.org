@@ -25,6 +25,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 - [[#import-packages][Import packages]]
 - [[#the-role_selection-class][The role_selection class]]
 - [[#the-role_select-function][The role_select function]]
+- [[#the-add_reaction-listener][The add_reaction listener]]
 - [[#setup-function][Setup function]]
 
 * The license notices
@@ -94,9 +95,19 @@ class role_selection (commands.Cog):
         msgs = json.load (msg_file)
 #+end_src
 
-** Store message link
+** Grep message id from url 
+Get guild id, channel id and message id from the message url.
 #+begin_src python
-    msgs[message_link] = {}
+    try:
+      gcm = message_link.split ("/")[-3:]
+    except:
+      pass
+    msg_id = int (gcm[-1])
+#+end_src
+
+Create a dict using the message id as key.
+#+begin_src python
+    msgs[msg_id] = {}
 #+end_src
 
 ** Split user input emojis and roles into a dict
@@ -105,10 +116,10 @@ Check the item in list is whether a emoji, a role or none of above.
     try:
       for i in roles_and_emojis:
         if (((len (i) == 1) and (emoji.is_emoji (i))) or (i[1] == ":")):
-          msgs[message_link][i] = []
+          msgs[msg_id][i] = []
           which_emoji = i
         elif ((i[0] == "<") and (i[1] == "@")):
-          msgs[message_link][which_emoji].append (i)
+          msgs[msg_id][which_emoji].append (i)
         else:
           await ctx.send ("好像打錯什麼了")
           return
@@ -124,26 +135,53 @@ Write changes into the json file.
 #+end_src
 
 ** Add reaction to the message
-Get guild id, channel id and message id from the message url.
-#+begin_src python
-    try:
-      gcm = message_link.split ("/")[-3:]
-    except:
-      pass
-    msg_id = int (gcm[-1])
-#+end_src
-
 Fetch message by id and add reaction to it.
 #+begin_src python
     msg = await ctx.fetch_message (msg_id)
 
-    for i in msgs[message_link].keys ():
+    for i in msgs[msg_id].keys ():
       await msg.add_reaction (i)
 #+end_src
 
 Then delete the command message
 #+begin_src python
     await ctx.message.delete ()    
+#+end_src
+
+* The add_reaction listener
+#+begin_src python
+  @commands.Cog.listener ()
+  async def on_raw_reaction_add (self, payload):
+#+end_src
+
+** Check the reaction if added by bot 
+#+begin_src python
+    if (payload.member.bot):
+      return
+#+end_src
+
+** Read the file if it exists
+#+begin_src python
+    try:
+      with open (f"./datas/role_select/role_select_{payload.guild_id}.json") as role_select_file:
+        data = json.load (role_select_file)
+    except:
+      return
+#+end_src
+
+** Check if the emoji is in the list and is added on the message
+#+begin_src python
+    msg_id = str (payload.message_id)
+    emoji = str (payload.emoji)
+#+end_src
+
+#+begin_src python
+    if ((msg_id in data)
+        and (emoji in data[msg_id])):
+      guild = self.bot.get_guild (payload.guild_id)
+      for i in data[msg_id][emoji]:
+        role = guild.get_role (int (i[3:-1]))
+        await payload.member.add_roles (role)
 #+end_src
 
 * Setup function
