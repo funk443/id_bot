@@ -1,0 +1,153 @@
+#+TITLE: Get roles by reacting to a message
+#+AUTHOR: CToID
+#+PROPERTY: header-args :tangle ../src/role_select.py
+#+OPTIONS: num:nil
+
+Copyright (C) 2022  CToID
+
+This file is part of id_bot
+
+id_bot is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published
+by the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+id_bot is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+* Table of contents :TOC_1:noexport:
+- [[#the-license-notices][The license notices]]
+- [[#import-packages][Import packages]]
+- [[#the-role_selection-class][The role_selection class]]
+- [[#the-role_select-function][The role_select function]]
+- [[#setup-function][Setup function]]
+
+* The license notices
+#+begin_src python
+"""
+Copyright (C) 2022  CToID
+
+This file is part of id_bot
+
+id_bot is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published
+by the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+id_bot is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+"""
+#+end_src
+
+* Import packages
+| Package              | Description                   |
+|----------------------+-------------------------------|
+| discord              | Discord API for python        |
+| discord.ext.commands | Command extension for discord |
+| json                 | For storing role datas        |
+| os                   | For file manipulation         |
+| emoji                | For checking emoji            |
+#+begin_src python
+import discord, json, os, emoji
+from discord.ext import commands
+#+end_src
+
+* The role_selection class
+#+begin_src python
+class role_selection (commands.Cog):
+  def __init__ (self, bot):
+    self.bot = bot
+#+end_src
+
+* The role_select function
+#+begin_src python
+  @commands.command ()
+  async def role_select (self, ctx, message_link, *roles_and_emojis):
+#+end_src
+
+** Only owner can use this command
+#+begin_src python
+    if (ctx.author != ctx.guild.owner):
+      await ctx.send ("還想皮")
+      return
+#+end_src
+
+** Read in the emoji file if exist
+#+begin_src python
+    try:
+      with open (f"./datas/role_select/role_select_{ctx.guild.id}.json") as msg_file:
+        msgs = json.load (msg_file)
+    except:
+      with open (f"./datas/role_select/role_select_{ctx.guild.id}.json", "w") as msg_file:
+        json.dump ({}, msg_file, indent = 2)
+      with open (f"./datas/role_select/role_select_{ctx.guild.id}.json") as msg_file:
+        msgs = json.load (msg_file)
+#+end_src
+
+** Store message link
+#+begin_src python
+    msgs[message_link] = {}
+#+end_src
+
+** Split user input emojis and roles into a dict
+Check the item in list is whether a emoji, a role or none of above.
+#+begin_src python
+    try:
+      for i in roles_and_emojis:
+        if (((len (i) == 1) and (emoji.is_emoji (i))) or (i[1] == ":")):
+          msgs[message_link][i] = []
+          which_emoji = i
+        elif ((i[0] == "<") and (i[1] == "@")):
+          msgs[message_link][which_emoji].append (i)
+        else:
+          await ctx.send ("好像打錯什麼了")
+          return
+    except:
+      await ctx.send ("好像打錯什麼了")
+      return
+#+end_src
+
+Write changes into the json file.
+#+begin_src python
+    with open (f"./datas/role_select/role_select_{ctx.guild.id}.json", "w") as msg_file:
+      json.dump (msgs, msg_file, indent = 2)
+#+end_src
+
+** Add reaction to the message
+Get guild id, channel id and message id from the message url.
+#+begin_src python
+    try:
+      gcm = message_link.split ("/")[-3:]
+    except:
+      pass
+    msg_id = int (gcm[-1])
+#+end_src
+
+Fetch message by id and add reaction to it.
+#+begin_src python
+    msg = await ctx.fetch_message (msg_id)
+
+    for i in msgs[message_link].keys ():
+      await msg.add_reaction (i)
+#+end_src
+
+Then delete the command message
+#+begin_src python
+    await ctx.message.delete ()    
+#+end_src
+
+* Setup function
+#+begin_src python
+def setup (bot):
+  bot.add_cog (role_selection (bot))
+#+end_src
