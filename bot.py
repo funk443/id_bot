@@ -67,7 +67,16 @@ async def change_prefix (ctx, npf = None):
 
 try:
   os.mkdir ("./datas")
+except:
+  pass
+
+try:
   os.mkdir ("./datas/reply")
+except:
+  pass
+
+try:
+  os.mkdir ("./datas/role_select")
 except:
   pass
 
