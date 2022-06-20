@@ -52,14 +52,15 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #+end_src
 
 * Import packages
-| Package      | Description                                  |
-|--------------+----------------------------------------------|
-| discord      | A discord API for python, part of discord.py |
-| discord.ext  | An extension for discord.py                  |
-| configparser | For reading ini files                        |
-| os           | For file manipulations                       |
+| Package              | Description                                  |
+|----------------------+----------------------------------------------|
+| discord              | A discord API for python, part of discord.py |
+| discord.ext.commands | Command extension for discord                |
+| configparser         | For reading ini files                        |
+| os                   | For file manipulations                       |
+| json                 | For data storing and reading                 |
 #+begin_src python
-import discord, configparser, os
+import discord, configparser, os, json
 from discord.ext import commands
 #+end_src
 
@@ -74,27 +75,30 @@ intents = discord.Intents.all ()
 activity = discord.Game (name = "GNU Emacs")
 #+end_src
 
-** Reading in Discord bot token, config and prefix file
-| File       | Description                        |
-|------------+------------------------------------|
-| config.ini | For storing tokens and other stuff |
-| prefix.ini | For storing prefixes               |
+** Reading in Discord bot token and prefix file
+| File        | Description                        |
+|-------------+------------------------------------|
+| config.ini  | For storing tokens and other stuff |
+| prefix.json | For storing prefixes               |
 #+begin_src python
 config = configparser.ConfigParser ()
 config.read ("config.ini")
 
-pf = configparser.ConfigParser ()
-pf.read ("prefix.ini")
+if ("prefix.json" not in os.listdir ()):
+  with open ("./prefix.json", "w") as json_file:
+    json.dump ({"default": "id "}, json_file)
+
+with open ("./prefix.json", "r") as json_file:
+  prefix = json.load (json_file)
 #+end_src
 
-** Setting up get_prefix function
-We can use this function to achieve different prefixs on different servers.
+** A function to get prefix for different server
 #+begin_src python
 async def get_prefix (bot, ctx):
-  if (str (ctx.guild.id) not in pf):
-    return pf["default"]["prefix"][1:-1]
-  else:
-    return pf[str (ctx.guild.id)]["prefix"]
+  try:
+    return prefix[str (ctx.guild.id)]
+  except:
+    return prefix["default"]
 #+end_src
 
 ** Define the bot
@@ -120,25 +124,22 @@ async def on_ready ():
 #+end_src
 
 ** Prefix changing
-Allow users to change prefix.
 #+begin_src python
 @bot.command ()
 async def change_prefix (ctx, npf = None):
   if (npf != None):
-    pf[str (ctx.guild.id)]["prefix"] = npf
-    await ctx.send (f"Prefix changed to {npf}")
+    prefix[str (ctx.guild.id)] = npf
+    await ctx.send (f"改成 `{npf}`")
   else:
-    pf[str (ctx.guild.id)]["prefix"] = pf["default"]["prefix"][1:-1]
-    await ctx.send ("沒給我東西那我就把他改回預設的了")
-
-  with open ("prefix.ini", "w") as prefixfile:
-    pf.write (prefixfile)
+    prefix[str (ctx.guild.id)] = prefix["default"]
+    await ctx.send ("改回預設引導詞")
 #+end_src
 
 * Create necessery directories if they don't exist
 #+begin_src python
 try:
   os.mkdir ("./datas")
+  os.mkdir ("./datas/reply")
 except:
   pass
 #+end_src
@@ -146,9 +147,9 @@ except:
 * Reading cog files
 This will read cog files from cogs folder.
 #+begin_src python
-for fn in os.listdir ("./cogs"):
+for fn in os.listdir ("./src"):
   if (fn.endswith (".py")):
-    bot.load_extension (f"cogs.{fn[:-3]}")
+    bot.load_extension (f"src.{fn[:-3]}")
 #+end_src
 
 * Important stuff

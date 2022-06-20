@@ -1,0 +1,127 @@
+#+TITLE: Replying to specified message
+#+AUTHOR: CToID
+#+PROPERTY: header-args :tangle ../src/reply.py
+#+OPTIONS: num:nil
+
+Copyright (C) 2022  CToID
+
+This file is part of id_bot
+
+id_bot is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published
+by the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+id_bot is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+* Table of contents :TOC_1:noexport:
+- [[#the-license-notices][The license notices]]
+- [[#import-packages][Import packages]]
+- [[#the-reply-class][The reply class]]
+- [[#the-reply-function][The reply function]]
+- [[#setup-function][Setup function]]
+
+* The license notices
+#+begin_src python
+"""
+Copyright (C) 2022  CToID
+
+This file is part of id_bot
+
+id_bot is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published
+by the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+id_bot is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+"""
+#+end_src
+
+* Import packages
+| Package              | Description                   |
+|----------------------+-------------------------------|
+| discord              | Discord API for python        |
+| discord.ext.commands | Command extension for discord |
+| json                 | For storing reply datas       |
+| os                   | For file manipulation         |
+#+begin_src python
+import discord, json, os, configparser
+from discord.ext import commands
+#+end_src
+
+* The reply class
+#+begin_src python
+class reply (commands.Cog):
+  def __init__ (self, bot):
+    self.bot = bot
+#+end_src
+
+* The reply function
+#+begin_src python
+  @commands.command ()
+  async def reply (self, ctx, key, content_1 = None, content_2 = None):
+#+end_src
+
+** Read/Create the reply file
+#+begin_src python
+    try:
+      with open (f"./datas/reply/reply_{ctx.guild.id}.json") as reply_file:
+        rp = json.load (reply_file)
+    except:
+      with open (f"./datas/reply/reply_{ctx.guild.id}.json", "w") as reply_file:
+        json.dump ({}, reply_file)
+#+end_src
+
+** Add reply
+#+begin_src python
+    if (key == "add"):
+      if ((content_1 == None)
+          or ((content_2 == None) and (len (ctx.message.attachments) == 0))):
+        await ctx.send ("你什麼都沒有給我是要加什麼啦")
+      elif (len (ctx.message.attachments) != 0):
+        rp[content_1] = ctx.message.attachments
+      else:
+        rp[content_1] = content_2
+#+end_src
+
+** Delete reply
+#+begin_src python
+    elif (key == "del"):
+      if (content_1 == None):
+        await ctx.send ("你什麼都沒有給我是要刪空氣喔")
+      else:
+        try:
+          rp.pop (content_1)
+        except:
+          await ctx.send ("本來就沒有的東西我要怎麼刪")
+#+end_src
+
+** List reply 
+#+begin_src python
+    else:
+      return
+#+end_src
+
+** Write the changes into reply file
+#+begin_src python
+    with open (f"./datas/reply/reply_{ctx.guild.id}.json", "w") as reply_file:
+      json.dump (rp, reply_file)
+#+end_src
+
+* Setup function
+#+begin_src python
+def setup (bot):
+  bot.add_cog (reply (bot))
+#+end_src

@@ -17,7 +17,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-import discord, configparser, os
+import discord, configparser, os, json
 from discord.ext import commands
 
 intents = discord.Intents.all ()
@@ -27,14 +27,18 @@ activity = discord.Game (name = "GNU Emacs")
 config = configparser.ConfigParser ()
 config.read ("config.ini")
 
-pf = configparser.ConfigParser ()
-pf.read ("prefix.ini")
+if ("prefix.json" not in os.listdir ()):
+  with open ("./prefix.json", "w") as json_file:
+    json.dump ({"default": "id "}, json_file)
+
+with open ("./prefix.json", "r") as json_file:
+  prefix = json.load (json_file)
 
 async def get_prefix (bot, ctx):
-  if (str (ctx.guild.id) not in pf):
-    return pf["default"]["prefix"][1:-1]
-  else:
-    return pf[str (ctx.guild.id)]["prefix"]
+  try:
+    return prefix[str (ctx.guild.id)]
+  except:
+    return prefix["default"]
 
 bot = commands.Bot (command_prefix = get_prefix, intents = intents, activity = activity, help_command = None)
 
@@ -50,23 +54,21 @@ async def on_ready ():
 @bot.command ()
 async def change_prefix (ctx, npf = None):
   if (npf != None):
-    pf[str (ctx.guild.id)]["prefix"] = npf
-    await ctx.send (f"Prefix changed to {npf}")
+    prefix[str (ctx.guild.id)] = npf
+    await ctx.send (f"改成 `{npf}`")
   else:
-    pf[str (ctx.guild.id)]["prefix"] = pf["default"]["prefix"][1:-1]
-    await ctx.send ("沒給我東西那我就把他改回預設的了")
-
-  with open ("prefix.ini", "w") as prefixfile:
-    pf.write (prefixfile)
+    prefix[str (ctx.guild.id)] = prefix["default"]
+    await ctx.send ("改回預設引導詞")
 
 try:
   os.mkdir ("./datas")
+  os.mkdir ("./datas/reply")
 except:
   pass
 
-for fn in os.listdir ("./cogs"):
+for fn in os.listdir ("./src"):
   if (fn.endswith (".py")):
-    bot.load_extension (f"cogs.{fn[:-3]}")
+    bot.load_extension (f"src.{fn[:-3]}")
 
 if (__name__ == "__main__"):
   bot.run (str (config["tokens"]["discord_token"]))
