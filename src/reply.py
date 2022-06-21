@@ -35,13 +35,19 @@ class reply (commands.Cog):
         json.dump ({}, reply_file)
 
     if (key == "add"):
-      if ((content_1 == None)
-          or ((content_2 == None) and (len (ctx.message.attachments) == 0))):
-        await ctx.send ("你什麼都沒有給我是要加什麼啦")
-      elif (len (ctx.message.attachments) != 0):
-        rp[content_1] = ctx.message.attachments
-      else:
-        rp[content_1] = content_2
+      try:
+        if ((content_1 == None)
+            or ((content_2 == None) and (len (ctx.message.attachments) == 0))):
+          await ctx.send ("你什麼都沒有給我是要加什麼啦")
+        elif (len (ctx.message.attachments) != 0):
+          urls = []
+          for i in ctx.message.attachments:
+            urls.append (i.url)
+          rp[content_1] = urls
+        else:
+          rp[content_1] = content_2
+      except:
+        return
 
     elif (key == "del"):
       if (content_1 == None):
