@@ -96,17 +96,13 @@ class role_selection (commands.Cog):
 #+end_src
 
 ** Grep message id from url 
-Get guild id, channel id and message id from the message url.
+Get message id from url
 #+begin_src python
     try:
       gcm = message_link.split ("/")[-3:]
     except:
       pass
     msg_id = int (gcm[-1])
-#+end_src
-
-Create a dict using the message id as key.
-#+begin_src python
     msgs[msg_id] = {}
 #+end_src
 

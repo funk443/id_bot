@@ -45,7 +45,6 @@ class role_selection (commands.Cog):
     except:
       pass
     msg_id = int (gcm[-1])
-
     msgs[msg_id] = {}
 
     try:
