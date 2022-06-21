@@ -33,7 +33,7 @@ class events (commands.Cog):
     if (f"reply_{message.guild.id}.json" not in os.listdir ("./datas/reply")):
       return
     else:
-      with open (f"./datas/reply/reply_{message.guild.id}.json") as reply_file:
+      with open (f"./datas/reply/reply_{message.guild.id}.json", encoding = "utf8") as reply_file:
         rp = json.load (reply_file)
 
     if (message.content in rp):

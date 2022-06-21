@@ -28,11 +28,11 @@ class reply (commands.Cog):
   async def reply (self, ctx, key, content_1 = None, content_2 = None):
 
     try:
-      with open (f"./datas/reply/reply_{ctx.guild.id}.json") as reply_file:
+      with open (f"./datas/reply/reply_{ctx.guild.id}.json", encoding = "utf8") as reply_file:
         rp = json.load (reply_file)
     except:
-      with open (f"./datas/reply/reply_{ctx.guild.id}.json", "w") as reply_file:
-        json.dump ({}, reply_file)
+      with open (f"./datas/reply/reply_{ctx.guild.id}.json", "w", encoding = "utf8") as reply_file:
+        json.dump ({}, reply_file, ensure_ascii = False)
 
     if (key == "add"):
       try:
@@ -64,8 +64,8 @@ class reply (commands.Cog):
     else:
       return
 
-    with open (f"./datas/reply/reply_{ctx.guild.id}.json", "w") as reply_file:
-      json.dump (rp, reply_file, indent = 2)
+    with open (f"./datas/reply/reply_{ctx.guild.id}.json", "w", encoding = "utf8") as reply_file:
+      json.dump (rp, reply_file, indent = 2, ensure_ascii = False)
 
 def setup (bot):
   bot.add_cog (reply (bot))

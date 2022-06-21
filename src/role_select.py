@@ -32,12 +32,12 @@ class role_selection (commands.Cog):
       return
 
     try:
-      with open (f"./datas/role_select/role_select_{ctx.guild.id}.json") as msg_file:
+      with open (f"./datas/role_select/role_select_{ctx.guild.id}.json", encoding = "utf8") as msg_file:
         msgs = json.load (msg_file)
     except:
-      with open (f"./datas/role_select/role_select_{ctx.guild.id}.json", "w") as msg_file:
+      with open (f"./datas/role_select/role_select_{ctx.guild.id}.json", "w", encoding = "utf8") as msg_file:
         json.dump ({}, msg_file, indent = 2)
-      with open (f"./datas/role_select/role_select_{ctx.guild.id}.json") as msg_file:
+      with open (f"./datas/role_select/role_select_{ctx.guild.id}.json", encoding = "utf8") as msg_file:
         msgs = json.load (msg_file)
 
     try:
@@ -61,7 +61,7 @@ class role_selection (commands.Cog):
       await ctx.send ("好像打錯什麼了")
       return
 
-    with open (f"./datas/role_select/role_select_{ctx.guild.id}.json", "w") as msg_file:
+    with open (f"./datas/role_select/role_select_{ctx.guild.id}.json", "w", encoding = "utf8") as msg_file:
       json.dump (msgs, msg_file, indent = 2)
 
     msg = await ctx.fetch_message (msg_id)
@@ -78,7 +78,7 @@ class role_selection (commands.Cog):
       return
 
     try:
-      with open (f"./datas/role_select/role_select_{payload.guild_id}.json") as role_select_file:
+      with open (f"./datas/role_select/role_select_{payload.guild_id}.json", encoding = "utf8") as role_select_file:
         data = json.load (role_select_file)
     except:
       return

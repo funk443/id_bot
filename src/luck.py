@@ -29,12 +29,12 @@ class daily_luck (commands.Cog):
     lucks = ("大凶", "凶", "小凶", "平", "小吉", "吉", "大吉", "你命由你不由天，自己幸福自己拼", "在吉跟不吉之間")
 
     try:
-      with open ("./datas/luck.json") as luck_file:
+      with open ("./datas/luck.json", encoding = "utf8") as luck_file:
         records = json.load (luck_file)
     except:
-      with open ("./datas/luck.json", "w") as luck_file:
+      with open ("./datas/luck.json", "w", encoding = "utf8") as luck_file:
         json.dump ({}, luck_file, indent = 2)
-      with open ("./datas/luck.json") as luck_file:
+      with open ("./datas/luck.json", encoding = "utf8") as luck_file:
         records = json.load (luck_file)
 
     shift = datetime.timedelta (hours = 8)
@@ -43,7 +43,7 @@ class daily_luck (commands.Cog):
       today_luck = random.choice (lucks)
       await ctx.reply (today_luck)
       records[str (ctx.author.id)] = [(ctx.message.created_at + shift).date ().isoformat (), today_luck]
-      with open ("./datas/luck.json", "w") as luck_file:
+      with open ("./datas/luck.json", "w", encoding = "utf8") as luck_file:
         json.dump (records, luck_file, indent = 2)
       return
 
@@ -51,7 +51,7 @@ class daily_luck (commands.Cog):
       today_luck = random.choice (lucks)
       await ctx.reply (today_luck)
       records[str (ctx.author.id)] = [(ctx.message.created_at + shift).date ().isoformat (), today_luck]
-      with open ("./datas/luck.json", "w") as luck_file:
+      with open ("./datas/luck.json", "w", encoding = "utf8") as luck_file:
         json.dump (records, luck_file, indent = 2)
     else:
       await ctx.reply (f"啊不就跟你說今天是 {records[str (ctx.author.id)][1]} 了")

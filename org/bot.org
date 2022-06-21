@@ -85,17 +85,17 @@ config = configparser.ConfigParser ()
 config.read ("config.ini")
 
 if ("prefix.json" not in os.listdir ()):
-  with open ("./prefix.json", "w") as json_file:
+  with open ("./prefix.json", "w", encoding = "utf8") as json_file:
     json.dump ({"default": "id "}, json_file, indent = 2)
 
-with open ("./prefix.json", "r") as json_file:
+with open ("./prefix.json", "r", encoding = "utf8") as json_file:
   prefix = json.load (json_file)
 #+end_src
 
 ** A function to get prefix for different server
 #+begin_src python
 async def get_prefix (bot, ctx):
-  with open ("./prefix.json", "r") as json_file:
+  with open ("./prefix.json", "r", encoding = "utf8") as json_file:
     prefix = json.load (json_file)
   try:
     return prefix[str (ctx.guild.id)]
@@ -136,7 +136,7 @@ async def change_prefix (ctx, npf = None):
     prefix[str (ctx.guild.id)] = prefix["default"]
     await ctx.send ("改回預設引導詞")
 
-  with open ("./prefix.json", "w") as json_file:
+  with open ("./prefix.json", "w", encoding = "utf8") as json_file:
     json.dump (prefix, json_file, indent = 2)
 #+end_src
 

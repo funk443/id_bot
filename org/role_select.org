@@ -86,12 +86,12 @@ class role_selection (commands.Cog):
 ** Read in the emoji file if exist
 #+begin_src python
     try:
-      with open (f"./datas/role_select/role_select_{ctx.guild.id}.json") as msg_file:
+      with open (f"./datas/role_select/role_select_{ctx.guild.id}.json", encoding = "utf8") as msg_file:
         msgs = json.load (msg_file)
     except:
-      with open (f"./datas/role_select/role_select_{ctx.guild.id}.json", "w") as msg_file:
+      with open (f"./datas/role_select/role_select_{ctx.guild.id}.json", "w", encoding = "utf8") as msg_file:
         json.dump ({}, msg_file, indent = 2)
-      with open (f"./datas/role_select/role_select_{ctx.guild.id}.json") as msg_file:
+      with open (f"./datas/role_select/role_select_{ctx.guild.id}.json", encoding = "utf8") as msg_file:
         msgs = json.load (msg_file)
 #+end_src
 
@@ -126,7 +126,7 @@ Check the item in list is whether a emoji, a role or none of above.
 
 Write changes into the json file.
 #+begin_src python
-    with open (f"./datas/role_select/role_select_{ctx.guild.id}.json", "w") as msg_file:
+    with open (f"./datas/role_select/role_select_{ctx.guild.id}.json", "w", encoding = "utf8") as msg_file:
       json.dump (msgs, msg_file, indent = 2)
 #+end_src
 
@@ -159,7 +159,7 @@ Then delete the command message
 ** Read the file if it exists
 #+begin_src python
     try:
-      with open (f"./datas/role_select/role_select_{payload.guild_id}.json") as role_select_file:
+      with open (f"./datas/role_select/role_select_{payload.guild_id}.json", encoding = "utf8") as role_select_file:
         data = json.load (role_select_file)
     except:
       return
