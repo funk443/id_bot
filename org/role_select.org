@@ -169,9 +169,7 @@ Then delete the command message
 #+begin_src python
     msg_id = str (payload.message_id)
     emoji = str (payload.emoji)
-#+end_src
 
-#+begin_src python
     if ((msg_id in data)
         and (emoji in data[msg_id])):
       guild = self.bot.get_guild (payload.guild_id)
