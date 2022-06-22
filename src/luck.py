@@ -39,15 +39,16 @@ class daily_luck (commands.Cog):
 
     shift = datetime.timedelta (hours = 8)
 
-    if (str (ctx.author.id) not in records):
-      today_luck = random.choice (lucks)
-      await ctx.reply (today_luck)
-      records[str (ctx.author.id)] = [(ctx.message.created_at + shift).date ().isoformat (), today_luck]
-      with open ("./datas/luck.json", "w", encoding = "utf8") as luck_file:
-        json.dump (records, luck_file, indent = 2, ensure_ascii = False)
-      return
+    # if (str (ctx.author.id) not in records):
+    #   today_luck = random.choice (lucks)
+    #   await ctx.reply (today_luck)
+    #   records[str (ctx.author.id)] = [(ctx.message.created_at + shift).date ().isoformat (), today_luck]
+    #   with open ("./datas/luck.json", "w", encoding = "utf8") as luck_file:
+    #     json.dump (records, luck_file, indent = 2, ensure_ascii = False)
+    #   return
 
-    if (datetime.date.fromisoformat (records[str (ctx.author.id)][0]) < datetime.date.today ()):
+    if ((str (ctx.author.id) not in records)
+        or (datetime.date.fromisoformat (records[str (ctx.author.id)][0]) < datetime.date.today ())):
       today_luck = random.choice (lucks)
       await ctx.reply (today_luck)
       records[str (ctx.author.id)] = [(ctx.message.created_at + shift).date ().isoformat (), today_luck]
