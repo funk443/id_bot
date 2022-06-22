@@ -114,7 +114,7 @@ bot = commands.Bot (command_prefix = get_prefix, intents = intents, activity = a
 print ("id_bot  Copyright (C) 2022  CToID")
 print ("This program comes with ABSOLUTELY NO WARRANTY.")
 print ("This program is free software, and you are welcome to redistribute it under certain conditions.")
-print ("Check version 3 (or any later version) of GNU Affero General Public License for details.")
+print ("Check version 3 (or any later version) of GNU Affero General Public License for details.\n")
 #+end_src
 
 ** Bot online check
@@ -122,7 +122,7 @@ This will print out a message when bot is all set and connected to discord.
 #+begin_src python
 @bot.event
 async def on_ready ():
-  print ("UP")
+  print ("Bot is ready and connected")
 #+end_src
 
 ** Prefix changing
@@ -141,6 +141,7 @@ async def change_prefix (ctx, npf = None):
 #+end_src
 
 * Create necessery directories if they don't exist
+Directory for storing all of the datas.
 #+begin_src python
 try:
   os.mkdir ("./datas")
@@ -148,6 +149,7 @@ except:
   pass
 #+end_src
 
+Directory for storing all of the reply datas.
 #+begin_src python
 try:
   os.mkdir ("./datas/reply")
@@ -155,6 +157,7 @@ except:
   pass
 #+end_src
 
+Directory for storing all of the role selection datas.
 #+begin_src python
 try:
   os.mkdir ("./datas/role_select")

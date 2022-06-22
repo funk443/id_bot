@@ -47,11 +47,11 @@ bot = commands.Bot (command_prefix = get_prefix, intents = intents, activity = a
 print ("id_bot  Copyright (C) 2022  CToID")
 print ("This program comes with ABSOLUTELY NO WARRANTY.")
 print ("This program is free software, and you are welcome to redistribute it under certain conditions.")
-print ("Check version 3 (or any later version) of GNU Affero General Public License for details.")
+print ("Check version 3 (or any later version) of GNU Affero General Public License for details.\n")
 
 @bot.event
 async def on_ready ():
-  print ("UP")
+  print ("Bot is ready and connected")
 
 @bot.command ()
 async def change_prefix (ctx, npf = None):
