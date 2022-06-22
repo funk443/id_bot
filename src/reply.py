@@ -39,6 +39,7 @@ class reply (commands.Cog):
         if ((content_1 == None)
             or ((content_2 == None) and (len (ctx.message.attachments) == 0))):
           await ctx.send ("你什麼都沒有給我是要加什麼啦")
+          return
         elif (len (ctx.message.attachments) != 0):
           urls = []
           for i in ctx.message.attachments:
@@ -46,20 +47,25 @@ class reply (commands.Cog):
           rp[content_1] = urls
         else:
           rp[content_1] = content_2
+        await ctx.send (f"以後有人說 {content_1}，我會回他 {content_2}")
       except:
         return
 
     elif (key == "del"):
       if (content_1 == None):
         await ctx.send ("你什麼都沒有給我是要刪空氣喔")
+        return
       else:
         try:
           rp.pop (content_1)
+          await ctx.send (f"刪除了 {content_1}")
         except:
           await ctx.send ("本來就沒有的東西我要怎麼刪")
+          return
 
     elif (key == "list"):
       await ctx.send (file = discord.File (f"./datas/reply/reply_{ctx.guild.id}.json"))
+      return
 
     else:
       return
