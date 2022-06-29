@@ -27,7 +27,8 @@ class role_selection (commands.Cog):
   @commands.command ()
   async def role_select (self, ctx, message_link, *roles_and_emojis):
 
-    if (ctx.author != ctx.guild.owner):
+    if ((ctx.author != ctx.guild.owner)
+        or (not ctx.author.permissions_in (ctx.channel).manage_roles)):
       await ctx.send ("還想皮")
       return
 

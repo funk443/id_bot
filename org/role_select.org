@@ -76,9 +76,10 @@ class role_selection (commands.Cog):
   async def role_select (self, ctx, message_link, *roles_and_emojis):
 #+end_src
 
-** Only owner can use this command
+** Only owner or people who have permission to modify roles can use this command
 #+begin_src python
-    if (ctx.author != ctx.guild.owner):
+    if ((ctx.author != ctx.guild.owner)
+        or (not ctx.author.permissions_in (ctx.channel).manage_roles)):
       await ctx.send ("還想皮")
       return
 #+end_src
