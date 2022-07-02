@@ -26,7 +26,7 @@
 
 假設現在要機器人在有人說「ad astra」的時候回應「per aspera」
 
-~id reply add "ad astra" "per aspera"~
+~id reply add "ad astra" "per aspera"‍~
 
 ** 刪除回覆
 ~id reply del <觸發字>~ 
