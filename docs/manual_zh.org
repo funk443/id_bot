@@ -40,7 +40,7 @@
 
 假設現在要機器人刪掉剛剛的第二個範例新增的回覆
 
-~id reply del "ad astra"~
+~id reply del "ad astra"‍~
 
 ** 列出回覆
 ~id reply list~ 
