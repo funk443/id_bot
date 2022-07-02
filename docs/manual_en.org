@@ -3,11 +3,39 @@
 
 * Table of contents :toc:noexport:
 - [[#reply][Reply]]
+  - [[#add-new-trigger-words][Add new trigger words]]
 - [[#luck][Luck]]
 - [[#role-selection][Role Selection]]
+  - [[#example][Example]]
 
 * Reply
+** Add new trigger words
+~id reply add <trigger word> <reply>~
+
+You can use this command to add new word to trigger the reply.
+If there are spaces in your trigger word or reply, please enclose them by double quotation mark (").
+
+*** Examples
+~id reply add foo bar~
+
+~id reply add "ad astra" "per aspera"‍~
 
 * Luck
+~id 今日運勢~
+
+Ask the bot about your luck today.
 
 * Role Selection
+~id role_select <message url or message id> <emoji1> <role1 for emoji1> <role2 for emoji1>...(seperate roles using space) <emoji2> <role1 for emoji2> <role2 for emoji2>...(seperate roles using space)~
+
+Allow user to get roles by reacting to specified message.
+Custom emojis are accepted.
+
+*Only those who have manage roles permission can use this command.*
+
+** Example
+Let's say you want anyone who reacts 🤔 to have @role1, 🐧 to have @role2 ,@role3 and @role4 and 😂 for @role5 and @role6.
+
+Your message URL (you can get it by right clicking the message) is https://discord.com/channels/967880009186435083/967880010281123913/992833044534808656.
+
+~id role_select https://discord.com/channels/967880009186435083/967880010281123913/992833044534808656 🤔 @role1 🐧 @role2 @role3 @role4 😂 @role5 @role6~
