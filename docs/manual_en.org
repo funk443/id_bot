@@ -4,6 +4,8 @@
 * Table of contents :toc:noexport:
 - [[#reply][Reply]]
   - [[#add-new-trigger-words][Add new trigger words]]
+  - [[#delete-trigger-words][Delete trigger words]]
+  - [[#list-all-the-replies-and-trigger-words][List all the replies and trigger words]]
 - [[#luck][Luck]]
 - [[#role-selection][Role Selection]]
   - [[#example][Example]]
@@ -19,6 +21,19 @@ If there are spaces in your trigger word or reply, please enclose them by double
 ~id reply add foo bar~
 
 ~id reply add "ad astra" "per aspera"‍~
+
+** Delete trigger words
+~id reply del <trigger word>~
+
+You can use this command to delete trigger words.
+
+*** Examples
+~id reply del foo~
+
+~id reply del "ad astra"‍~
+
+** List all the replies and trigger words
+~id reply list~
 
 * Luck
 ~id 今日運勢~
