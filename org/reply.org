@@ -99,7 +99,7 @@ class reply (commands.Cog):
           rp[content_1] = urls
         else:
           rp[content_1] = content_2
-        await ctx.send (f"以後有人說 {content_1}，我會回他 {content_2}")
+        await ctx.reply (f"以後有人說 {content_1}，我會回他 {content_2}")
       except:
         return
 #+end_src
