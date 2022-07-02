@@ -1,0 +1,13 @@
+#+TITLE: id_bot user's manual (en)
+#+AUTHOR: CToID
+
+* Table of contents :toc:noexport:
+- [[#reply][Reply]]
+- [[#luck][Luck]]
+- [[#role-selection][Role Selection]]
+
+* Reply
+
+* Luck
+
+* Role Selection
