@@ -57,5 +57,5 @@ class daily_luck (commands.Cog):
     else:
       await ctx.reply (f"啊不就跟你說今天是 {records[str (ctx.author.id)][1]} 了")
 
-def setup (bot):
-  bot.add_cog (daily_luck (bot))
+async def setup (bot):
+  await bot.add_cog (daily_luck (bot))

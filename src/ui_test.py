@@ -17,31 +17,17 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-import discord, json, os
+import discord
 from discord.ext import commands
 
-class events (commands.Cog):
+class ui_test (commands.Cog):
   def __init__ (self, bot):
     self.bot = bot
 
-  @commands.Cog.listener ()
-  async def on_message (self, message):
-
-    if ((message.author == self.bot.user) or (message.author.bot)):
-      return
-
-    if (f"reply_{message.guild.id}.json" not in os.listdir ("./datas/reply")):
-      return
-    else:
-      with open (f"./datas/reply/reply_{message.guild.id}.json", encoding = "utf8") as reply_file:
-        rp = json.load (reply_file)
-
-    if (message.content in rp):
-      if (type (rp[message.content]) == list):
-        for i in rp[message.content]:
-          await message.channel.send (i)
-      else:
-        await message.channel.send (rp[message.content])
+  @commands.command ()
+  async def button_test (self, ctx):
+    view = discord.ui.View ()
+    print (view)
 
 async def setup (bot):
-  await bot.add_cog (events (bot))
+  await bot.add_cog (ui_test (bot))

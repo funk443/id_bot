@@ -94,5 +94,5 @@ class role_selection (commands.Cog):
         role = guild.get_role (int (i[3:-1]))
         await payload.member.add_roles (role)
 
-def setup (bot):
-  bot.add_cog (role_selection (bot))
+async def setup (bot):
+  await bot.add_cog (role_selection (bot))

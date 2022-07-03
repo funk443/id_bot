@@ -73,5 +73,5 @@ class reply (commands.Cog):
     with open (f"./datas/reply/reply_{ctx.guild.id}.json", "w", encoding = "utf8") as reply_file:
       json.dump (rp, reply_file, indent = 2, ensure_ascii = False)
 
-def setup (bot):
-  bot.add_cog (reply (bot))
+async def setup (bot):
+  await bot.add_cog (reply (bot))
