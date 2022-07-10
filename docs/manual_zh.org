@@ -1,5 +1,6 @@
 #+TITLE: id_bot使用說明
 #+AUTHOR: CToID
+#+OPTIONS: num:nil
 
 * 目錄 :toc:noexport:
 - [[#回覆][回覆]]

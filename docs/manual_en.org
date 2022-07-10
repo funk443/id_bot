@@ -1,5 +1,6 @@
 #+TITLE: id_bot user's manual (en)
 #+AUTHOR: CToID
+#+OPTIONS: num:nil
 
 * Table of contents :toc:noexport:
 - [[#reply][Reply]]

@@ -140,6 +140,6 @@ class reply (commands.Cog):
 
 * Setup function
 #+begin_src python
-def setup (bot):
-  bot.add_cog (reply (bot))
+async def setup (bot):
+  await bot.add_cog (reply (bot))
 #+end_src

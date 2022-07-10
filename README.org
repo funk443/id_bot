@@ -21,6 +21,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 * Table of contents :toc:
 - [[#main-features][Main features]]
+- [[#needed-python-packages][Needed python packages]]
 
 * Main features
 This is basically a rewrite of bot_269, so most of the features are similar.
+
+* Needed python packages
+discord-ui discord.py

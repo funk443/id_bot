@@ -118,6 +118,6 @@ If the user is already in the record, then check if he/she had used this command
 
 * Setup function
 #+begin_src python
-def setup (bot):
-  bot.add_cog (daily_luck (bot))
+async def setup (bot):
+  await bot.add_cog (daily_luck (bot))
 #+end_src
