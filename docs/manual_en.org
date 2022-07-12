@@ -18,6 +18,7 @@ Free Documentation License".
 - [[#luck][Luck]]
 - [[#role-selection][Role Selection]]
   - [[#example][Example]]
+- [[#selection][Selection]]
 - [[#gnu-free-documentation-license][GNU Free Documentation License]]
 
 * Reply
@@ -64,6 +65,11 @@ Let's say you want anyone who reacts 🤔 to have @role1, 🐧 to have @role2 ,@
 Your message URL (you can get it by right clicking the message) is https://discord.com/channels/967880009186435083/967880010281123913/992833044534808656.
 
 ~id role_select https://discord.com/channels/967880009186435083/967880010281123913/992833044534808656 🤔 @role1 🐧 @role2 @role3 @role4 😂 @role5 @role6~
+
+* Selection
+~id sel option1 option2 option3...~
+
+Having problem choosing stuff? Let id_bot choose for you!
 
 * GNU Free Documentation License
 #+begin_src 
