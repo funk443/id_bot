@@ -12,9 +12,9 @@ Free Documentation License".
 
 * Table of contents :toc:noexport:
 - [[#reply][Reply]]
-  - [[#add-new-trigger-words][Add new trigger words]]
-  - [[#delete-trigger-words][Delete trigger words]]
-  - [[#list-all-the-replies-and-trigger-words][List all the replies and trigger words]]
+  - [[#add-new-trigger-words][Add New Trigger Words]]
+  - [[#delete-trigger-words][Delete Trigger Words]]
+  - [[#list-all-the-replies-and-trigger-words][List All The Replies And Trigger Words]]
 - [[#luck][Luck]]
 - [[#role-selection][Role Selection]]
   - [[#example][Example]]
@@ -22,7 +22,7 @@ Free Documentation License".
 - [[#gnu-free-documentation-license][GNU Free Documentation License]]
 
 * Reply
-** Add new trigger words
+** Add New Trigger Words
 ~id reply add <trigger word> <reply>~
 
 You can use this command to add new word to trigger the reply.
@@ -33,7 +33,7 @@ If there are spaces in your trigger word or reply, please enclose them by double
 
 ~id reply add "ad astra" "per aspera"‍~
 
-** Delete trigger words
+** Delete Trigger Words
 ~id reply del <trigger word>~
 
 You can use this command to delete trigger words.
@@ -43,7 +43,7 @@ You can use this command to delete trigger words.
 
 ~id reply del "ad astra"‍~
 
-** List all the replies and trigger words
+** List All The Replies And Trigger Words
 ~id reply list~
 
 * Luck
