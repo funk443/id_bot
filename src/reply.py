@@ -39,7 +39,7 @@ class reply (commands.Cog):
     pages_index = list (pages_index.items ())
 
     for i in range (pages):
-      pages_embeds[f"page_{i + 1}"] = discord.Embed (title = f"Page {i + 1} / {pages}")
+      pages_embeds[f"page_{i + 1}"] = discord.Embed (title = f"{ctx.guild.name}'s Reply List").set_footer (text = f"Page {i + 1} / {pages}")
       for j in range (len (pages_index[i][1])):
         name = pages_index[i][1][j][0]
         value = pages_index[i][1][j][1]
@@ -78,7 +78,7 @@ class reply (commands.Cog):
 
     while True:
       try:
-        user = await self.bot.wait_for ("interaction", timeout = 10.0,
+        user = await self.bot.wait_for ("interaction", timeout = 25.0,
                                         check = lambda interaction: interaction.user == ctx.author)
       except asyncio.TimeoutError:
         await msg.edit (embed = pages_embeds[f"page_{cur_page}"], view = create_view (True, True))
