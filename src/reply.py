@@ -26,6 +26,7 @@ class reply (commands.Cog):
     self.bot = bot
 
   async def reply_pages (self, ctx, list_rp):
+
     list_rp = list (list_rp.items ())
     per_page = 10
     pages = math.ceil (len (list_rp) / per_page)
@@ -86,6 +87,7 @@ class reply (commands.Cog):
 
   @commands.command ()
   async def reply (self, ctx, key, content_1 = None, content_2 = None):
+
     try:
       with open (f"./datas/reply/reply_{ctx.guild.id}.json", encoding = "utf8") as reply_file:
         rp = json.load (reply_file)

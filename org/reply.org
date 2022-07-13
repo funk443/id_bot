@@ -21,13 +21,14 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 * Table of contents :TOC_1:noexport:
-- [[#the-license-notices][The license notices]]
-- [[#import-packages][Import packages]]
-- [[#the-reply-class][The reply class]]
-- [[#the-reply-function][The reply function]]
-- [[#setup-function][Setup function]]
+- [[#the-license-notice][The License Notice]]
+- [[#import-packages][Import Packages]]
+- [[#define-reply-class-and-init][Define Reply Class and Init]]
+- [[#function-for-making-reply-list][Function for Making Reply List]]
+- [[#reply-function][Reply Function]]
+- [[#setup][Setup]]
 
-* The license notices
+* The License Notice
 #+begin_src python
 """
 Copyright (C) 2022  CToID
@@ -49,32 +50,111 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 #+end_src
 
-* Import packages
-| Package              | Description                   |
-|----------------------+-------------------------------|
-| discord              | Discord API for python        |
-| discord.ext.commands | Command extension for discord |
-| json                 | For storing reply datas       |
-| os                   | For file manipulation         |
+* Import Packages
 #+begin_src python
-import discord, json, os
+import discord, json, os, asyncio, math
+from discord import ui
 from discord.ext import commands
 #+end_src
 
-* The reply class
+* Define Reply Class and Init
 #+begin_src python
 class reply (commands.Cog):
   def __init__ (self, bot):
     self.bot = bot
 #+end_src
 
-* The reply function
+* Function for Making Reply List
+This function will take the list of reply, and make it into separate pages of embed messages.
+#+begin_src python
+  async def reply_pages (self, ctx, list_rp):
+#+end_src
+** Variables
+#+begin_src python
+    list_rp = list (list_rp.items ())
+    per_page = 10
+    pages = math.ceil (len (list_rp) / per_page)
+    cur_page = 1
+    pages_index = {}
+    pages_embeds = {}
+#+end_src
+
+** Turn Reply List into Embed Messages
+#+begin_src python
+    for i in range (pages):
+      pages_index[f"page_{i + 1}"] = list_rp[i * 10:(i + 1) * 10]
+
+    pages_index = list (pages_index.items ())
+
+    for i in range (pages):
+      pages_embeds[f"page_{i + 1}"] = discord.Embed (title = f"{ctx.guild.name}'s Reply List").set_footer (text = f"Page {i + 1} / {pages}")
+      for j in range (len (pages_index[i][1])):
+        name = pages_index[i][1][j][0]
+        value = pages_index[i][1][j][1]
+        pages_embeds[f"page_{i + 1}"].add_field (name = name, value = f"╰ {value}", inline = False)
+#+end_src
+
+** A Function to Create View
+#+begin_src python
+    def create_view (n_but, p_but):
+      view = ui.View ()
+      n_button = ui.Button (label = "Next Page", disabled = n_but)
+      p_button = ui.Button (label = "Previous Page", disabled = p_but)
+      n_button.callback = next_page 
+      p_button.callback = previous_page 
+      view.add_item (p_button)
+      view.add_item (n_button)
+      return view
+#+end_src
+
+** Callback Function for Next Page Button
+#+begin_src python
+    async def next_page (interactive):
+      await interactive.response.defer ()
+      nonlocal cur_page
+      if (cur_page != pages):
+        cur_page += 1
+        await msg.edit (embed = pages_embeds[f"page_{cur_page}"], view = create_view (False, False))
+        if (cur_page == pages):
+          await msg.edit (embed = pages_embeds[f"page_{cur_page}"], view = create_view (True, False))
+#+end_src
+
+** Callback Function for Previous Page Button
+#+begin_src python
+    async def previous_page (interactive):
+      await interactive.response.defer ()
+      nonlocal cur_page
+      if (cur_page > 1):
+        cur_page -= 1
+        await msg.edit (embed = pages_embeds[f"page_{cur_page}"], view = create_view (False, False))
+        if (cur_page == 1):
+          await msg.edit (embed = pages_embeds[f"page_{cur_page}"], view = create_view (False, True))
+#+end_src
+
+** Send the First Page
+#+begin_src python
+    view = create_view (False, True)
+    msg = await ctx.send (embed = pages_embeds[f"page_{cur_page}"], view = view)
+#+end_src
+
+** A Loop
+#+begin_src python
+    while True:
+      try:
+        user = await self.bot.wait_for ("interaction", timeout = 25.0,
+                                        check = lambda interaction: interaction.user == ctx.author)
+      except asyncio.TimeoutError:
+        await msg.edit (embed = pages_embeds[f"page_{cur_page}"], view = create_view (True, True))
+        break
+#+end_src
+
+* Reply Function
 #+begin_src python
   @commands.command ()
   async def reply (self, ctx, key, content_1 = None, content_2 = None):
 #+end_src
 
-** Read/Create the reply file
+** Open the Reply Datas File
 #+begin_src python
     try:
       with open (f"./datas/reply/reply_{ctx.guild.id}.json", encoding = "utf8") as reply_file:
@@ -84,7 +164,7 @@ class reply (commands.Cog):
         json.dump ({}, reply_file, ensure_ascii = False)
 #+end_src
 
-** Add reply
+** Add
 #+begin_src python
     if (key == "add"):
       try:
@@ -104,7 +184,7 @@ class reply (commands.Cog):
         return
 #+end_src
 
-** Delete reply
+** Delete
 #+begin_src python
     elif (key == "del"):
       if (content_1 == None):
@@ -119,14 +199,14 @@ class reply (commands.Cog):
           return
 #+end_src
 
-** Post reply list file
+** Send Reply Data File
 #+begin_src python
     elif (key == "list_f"):
       await ctx.send (file = discord.File (f"./datas/reply/reply_{ctx.guild.id}.json"))
       return
 #+end_src
 
-** List replies
+** Send Reply Data in Embed Messages
 #+begin_src python
     elif (key == "list"):
       list_rp = rp.copy ()
@@ -135,22 +215,22 @@ class reply (commands.Cog):
           list_rp[i] = "<This is an image or video>"
       for i in list_rp:
         words = "\n".join ([i, f"└ {list_rp[i]}\n"])
-        print (words)
+      await reply.reply_pages (self, ctx, list_rp)
 #+end_src
 
-** Wrong keys
+** Return if None of Above
 #+begin_src python
     else:
       return
 #+end_src
 
-** Write the changes into reply file
+** Write Changes
 #+begin_src python
     with open (f"./datas/reply/reply_{ctx.guild.id}.json", "w", encoding = "utf8") as reply_file:
       json.dump (rp, reply_file, indent = 2, ensure_ascii = False)
 #+end_src
 
-* Setup function
+* Setup
 #+begin_src python
 async def setup (bot):
   await bot.add_cog (reply (bot))
