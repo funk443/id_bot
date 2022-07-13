@@ -63,9 +63,18 @@ class reply (commands.Cog):
           await ctx.send ("本來就沒有的東西我要怎麼刪")
           return
 
-    elif (key == "list"):
+    elif (key == "list_f"):
       await ctx.send (file = discord.File (f"./datas/reply/reply_{ctx.guild.id}.json"))
       return
+
+    elif (key == "list"):
+      list_rp = rp.copy ()
+      for i in list_rp:
+        if ((type (list_rp[i]) == list) or (list_rp[i].startswith ("http"))):
+          list_rp[i] = "<This is an image or video>"
+      for i in list_rp:
+        words = "\n".join ([i, f"└ {list_rp[i]}\n"])
+        print (words)
 
     else:
       return
