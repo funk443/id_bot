@@ -19,12 +19,20 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-* Table of contents :toc:
-- [[#main-features][Main features]]
-- [[#needed-python-packages][Needed python packages]]
+* 目錄 Table of Contents                                                :toc:
+- [[#主要功能-main-features][主要功能 Main Features]]
+  - [[#回覆特定字詞-replying-to-trigger-words][回覆特定字詞 Replying to Trigger Words]]
+  - [[#今日運勢-todays-luck][今日運勢 Today's Luck]]
+  - [[#選擇困難症剋星-choosing-things-for-you][選擇困難症剋星 Choosing Things for You]]
+  - [[#透過表情符號給予身份組-choosing-roles-via-reacting-to-a-message][透過表情符號給予身份組 Choosing Roles via Reacting to a Message]]
+- [[#接下來要做的-todos][接下來要做的 TODOs]]
 
-* Main features
+* 主要功能 Main Features
 This is basically a rewrite of bot_269, so most of the features are similar.
+** 回覆特定字詞 Replying to Trigger Words
+** 今日運勢 Today's Luck
+** 選擇困難症剋星 Choosing Things for You
+** 透過表情符號給予身份組 Choosing Roles via Reacting to a Message
 
-* Needed python packages
-discord-ui discord.py
+* 接下來要做的 TODOs
+- [X] 優化回覆列表 Make reply list easier to read
