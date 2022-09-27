@@ -97,6 +97,7 @@ class reply (commands.Cog):
     except:
       with open (f"./datas/reply/reply_{ctx.guild.id}.json", "w", encoding = "utf8") as reply_file:
         json.dump ({}, reply_file, ensure_ascii = False)
+        rp = json.load (reply_file)
 
     if (key == "add"):
       try:
@@ -133,6 +134,9 @@ class reply (commands.Cog):
 
     elif (key == "list"):
       list_rp = rp.copy ()
+      if len (list_rp) == 0:
+        await ctx.send ("好像還沒有半個回覆")
+        return
       for i in list_rp:
         if ((type (list_rp[i]) == list) or (list_rp[i].startswith ("http"))):
           list_rp[i] = "<This is an image or video>"
