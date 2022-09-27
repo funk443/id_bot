@@ -76,6 +76,6 @@ class select (commands.Cog):
 
 * Setup function
 #+begin_src python
-def setup (bot):
-  bot.add_cog (select (bot))
+async def setup (bot):
+  await bot.add_cog (select (bot))
 #+end_src

@@ -29,5 +29,5 @@ class select (commands.Cog):
     item = random.choice (items)
     await ctx.reply (f"我選 {item}")
 
-def setup (bot):
-  bot.add_cog (select (bot))
+async def setup (bot):
+  await bot.add_cog (select (bot))
