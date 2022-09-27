@@ -136,7 +136,6 @@ class reply (commands.Cog):
       for i in list_rp:
         words = "\n".join ([i, f"└ {list_rp[i]}\n"])
       await reply.reply_pages (self, ctx, list_rp)
-
     else:
       return
 
