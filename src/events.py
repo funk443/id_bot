@@ -43,5 +43,5 @@ class events (commands.Cog):
       else:
         await message.channel.send (rp[message.content])
 
-def setup (bot):
-  bot.add_cog (events (bot))
+async def setup (bot):
+  await bot.add_cog (events (bot))

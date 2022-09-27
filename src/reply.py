@@ -17,12 +17,73 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-import discord, json, os
+import discord, json, os, asyncio, math
+from discord import ui
 from discord.ext import commands
 
 class reply (commands.Cog):
   def __init__ (self, bot):
     self.bot = bot
+
+  async def reply_pages (self, ctx, list_rp):
+
+    list_rp = list (list_rp.items ())
+    per_page = 10
+    pages = math.ceil (len (list_rp) / per_page)
+    cur_page = 1
+    pages_index = {}
+    pages_embeds = {}
+
+    for i in range (pages):
+      pages_index[f"page_{i + 1}"] = list_rp[i * 10:(i + 1) * 10]
+
+    pages_index = list (pages_index.items ())
+
+    for i in range (pages):
+      pages_embeds[f"page_{i + 1}"] = discord.Embed (title = f"{ctx.guild.name}'s Reply List").set_footer (text = f"Page {i + 1} / {pages}")
+      for j in range (len (pages_index[i][1])):
+        name = pages_index[i][1][j][0]
+        value = pages_index[i][1][j][1]
+        pages_embeds[f"page_{i + 1}"].add_field (name = name, value = f"╰ {value}", inline = False)
+
+    def create_view (n_but, p_but):
+      view = ui.View ()
+      n_button = ui.Button (label = "Next Page", disabled = n_but)
+      p_button = ui.Button (label = "Previous Page", disabled = p_but)
+      n_button.callback = next_page 
+      p_button.callback = previous_page 
+      view.add_item (p_button)
+      view.add_item (n_button)
+      return view
+
+    async def next_page (interactive):
+      await interactive.response.defer ()
+      nonlocal cur_page
+      if (cur_page != pages):
+        cur_page += 1
+        await msg.edit (embed = pages_embeds[f"page_{cur_page}"], view = create_view (False, False))
+        if (cur_page == pages):
+          await msg.edit (embed = pages_embeds[f"page_{cur_page}"], view = create_view (True, False))
+
+    async def previous_page (interactive):
+      await interactive.response.defer ()
+      nonlocal cur_page
+      if (cur_page > 1):
+        cur_page -= 1
+        await msg.edit (embed = pages_embeds[f"page_{cur_page}"], view = create_view (False, False))
+        if (cur_page == 1):
+          await msg.edit (embed = pages_embeds[f"page_{cur_page}"], view = create_view (False, True))
+
+    view = create_view (False, True)
+    msg = await ctx.send (embed = pages_embeds[f"page_{cur_page}"], view = view)
+
+    while True:
+      try:
+        user = await self.bot.wait_for ("interaction", timeout = 25.0,
+                                        check = lambda interaction: interaction.user == ctx.author)
+      except asyncio.TimeoutError:
+        await msg.edit (embed = pages_embeds[f"page_{cur_page}"], view = create_view (True, True))
+        break
 
   @commands.command ()
   async def reply (self, ctx, key, content_1 = None, content_2 = None):
@@ -74,13 +135,12 @@ class reply (commands.Cog):
           list_rp[i] = "<This is an image or video>"
       for i in list_rp:
         words = "\n".join ([i, f"└ {list_rp[i]}\n"])
-        print (words)
-
+      await reply.reply_pages (self, ctx, list_rp)
     else:
       return
 
     with open (f"./datas/reply/reply_{ctx.guild.id}.json", "w", encoding = "utf8") as reply_file:
       json.dump (rp, reply_file, indent = 2, ensure_ascii = False)
 
-def setup (bot):
-  bot.add_cog (reply (bot))
+async def setup (bot):
+  await bot.add_cog (reply (bot))

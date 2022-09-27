@@ -181,6 +181,6 @@ Then delete the command message
 
 * Setup function
 #+begin_src python
-def setup (bot):
-  bot.add_cog (role_selection (bot))
+async def setup (bot):
+  await bot.add_cog (role_selection (bot))
 #+end_src

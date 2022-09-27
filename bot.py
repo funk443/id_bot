@@ -17,7 +17,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-import discord, configparser, os, json
+import discord, configparser, os, json, asyncio
 from discord.ext import commands
 
 intents = discord.Intents.all ()
@@ -80,9 +80,11 @@ try:
 except:
   pass
 
-for fn in os.listdir ("./src"):
-  if (fn.endswith (".py")):
-    bot.load_extension (f"src.{fn[:-3]}")
+async def load_cogs ():
+  for fn in os.listdir ("./src"):
+    if (fn.endswith (".py")):
+      await bot.load_extension (f"src.{fn[:-3]}")
 
 if (__name__ == "__main__"):
+  asyncio.run (load_cogs ())
   bot.run (str (config["tokens"]["discord_token"]))

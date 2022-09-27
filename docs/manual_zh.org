@@ -1,5 +1,6 @@
 #+TITLE: id_bot使用說明
 #+AUTHOR: CToID
+#+OPTIONS: num:nil
 
 Copyright (C)  2022  CToID
 
