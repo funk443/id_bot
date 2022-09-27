@@ -74,7 +74,10 @@ class reply (commands.Cog):
         if (cur_page == 1):
           await msg.edit (embed = pages_embeds[f"page_{cur_page}"], view = create_view (False, True))
 
-    view = create_view (False, True)
+    if pages == 1:
+      view = create_view (True, True)
+    else:
+      view = create_view (False, True)
     msg = await ctx.send (embed = pages_embeds[f"page_{cur_page}"], view = view)
 
     while True:
@@ -136,6 +139,7 @@ class reply (commands.Cog):
       for i in list_rp:
         words = "\n".join ([i, f"└ {list_rp[i]}\n"])
       await reply.reply_pages (self, ctx, list_rp)
+
     else:
       return
 

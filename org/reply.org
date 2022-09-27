@@ -133,7 +133,10 @@ This function will take the list of reply, and make it into separate pages of em
 
 ** Send the First Page
 #+begin_src python
-    view = create_view (False, True)
+    if pages == 1:
+      view = create_view (True, True)
+    else:
+      view = create_view (False, True)
     msg = await ctx.send (embed = pages_embeds[f"page_{cur_page}"], view = view)
 #+end_src
 
